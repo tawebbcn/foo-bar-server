@@ -17,8 +17,9 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   const { bar, baz } = req.body;
+  return res.status(422).json({ code: 'unprosessable-entity' });
   if (!bar || !baz) {
-    return res.status(422).json({ message: 'unprosessable-entity' });
+    return res.status(422).json({ code: 'unprosessable-entity' });
   }
   const foo = new Foo(req.body);
   foo.save()
@@ -31,11 +32,11 @@ router.post('/', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
   if (!id || !ObjectId.isValid(id)) {
-    res.status(404).json('');
+    res.status(404).json({ code: 'not-found' });
   }
   Foo.remove({ _id: id })
     .then(() => {
-      res.json({ message: 'foo deleted' });
+      res.json({ code: 'foo deleted' });
     })
     .catch(next);
 });
